@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.joinmastodon.android.api.requests.trends.GetTrendingLinks;
+import org.joinmastodon.android.fragments.AccessRecycler;
 import org.joinmastodon.android.fragments.ScrollableToTop;
 import org.joinmastodon.android.model.Card;
 import org.joinmastodon.android.model.viewmodel.CardViewModel;
@@ -27,7 +28,7 @@ import me.grishka.appkit.utils.MergeRecyclerAdapter;
 import me.grishka.appkit.utils.V;
 import me.grishka.appkit.views.UsableRecyclerView;
 
-public class DiscoverNewsFragment extends BaseRecyclerFragment<DiscoverNewsFragment.CardItem> implements ScrollableToTop{
+public class DiscoverNewsFragment extends BaseRecyclerFragment<DiscoverNewsFragment.CardItem> implements ScrollableToTop, AccessRecycler{
 	private String accountID;
 	private DiscoverInfoBannerHelper bannerHelper;
 	private MergeRecyclerAdapter mergeAdapter;
@@ -92,6 +93,11 @@ public class DiscoverNewsFragment extends BaseRecyclerFragment<DiscoverNewsFragm
 				}
 			}
 		});
+	}
+
+	@Override
+	public RecyclerView getRecycler(){
+		return list;
 	}
 
 	public static class CardItem implements LinkCardHolder.LinkCardProvider{

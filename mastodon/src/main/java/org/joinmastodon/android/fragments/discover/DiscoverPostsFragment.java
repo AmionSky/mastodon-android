@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import org.joinmastodon.android.api.requests.trends.GetTrendingStatuses;
 import org.joinmastodon.android.api.session.AccountSessionManager;
+import org.joinmastodon.android.fragments.AccessRecycler;
 import org.joinmastodon.android.fragments.StatusListFragment;
 import org.joinmastodon.android.model.FilterContext;
 import org.joinmastodon.android.model.Status;
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.utils.MergeRecyclerAdapter;
 
-public class DiscoverPostsFragment extends StatusListFragment{
+public class DiscoverPostsFragment extends StatusListFragment implements AccessRecycler{
 	private DiscoverInfoBannerHelper bannerHelper;
 	private int realOffset=0;
 
@@ -45,5 +46,10 @@ public class DiscoverPostsFragment extends StatusListFragment{
 		bannerHelper.maybeAddBanner(list, adapter);
 		adapter.addAdapter(super.getAdapter());
 		return adapter;
+	}
+
+	@Override
+	public RecyclerView getRecycler(){
+		return list;
 	}
 }

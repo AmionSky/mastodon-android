@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import org.joinmastodon.android.MainActivity;
 import org.joinmastodon.android.R;
+import org.joinmastodon.android.fragments.AccessRecycler;
 import org.joinmastodon.android.fragments.ScrollableToTop;
 import org.joinmastodon.android.googleservices.GmsClient;
 import org.joinmastodon.android.googleservices.barcodescanner.Barcode;
@@ -28,6 +29,7 @@ import org.joinmastodon.android.ui.SimpleViewHolder;
 import org.joinmastodon.android.ui.tabs.TabLayout;
 import org.joinmastodon.android.ui.tabs.TabLayoutMediator;
 import org.joinmastodon.android.ui.utils.UiUtils;
+import org.joinmastodon.android.ui.views.NestedRecyclerScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +46,7 @@ public class DiscoverFragment extends AppKitFragment implements ScrollableToTop{
 
 	private TabLayout tabLayout;
 	private ViewPager2 pager;
+	private NestedRecyclerScrollView scroller;
 	private FrameLayout[] tabViews;
 	private TabLayoutMediator tabLayoutMediator;
 	private boolean searchActive;
@@ -81,6 +84,9 @@ public class DiscoverFragment extends AppKitFragment implements ScrollableToTop{
 		tabLayout=view.findViewById(R.id.tabbar);
 		pager=view.findViewById(R.id.pager);
 
+		scroller=view.findViewById(R.id.scroller);
+		scroller.setTakePriorityOverChildViews(true);
+
 		tabViews=new FrameLayout[4];
 		for(int i=0;i<tabViews.length;i++){
 			FrameLayout tabView=new FrameLayout(getActivity());
@@ -104,9 +110,12 @@ public class DiscoverFragment extends AppKitFragment implements ScrollableToTop{
 		pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback(){
 			@Override
 			public void onPageSelected(int position){
+				Fragment _page=getFragmentForPage(position);
+				scroller.setScrollableChildSupplier(((AccessRecycler)_page)::getRecycler);
+
 				if(position==0)
 					return;
-				Fragment _page=getFragmentForPage(position);
+
 				if(_page instanceof BaseRecyclerFragment<?> page){
 					if(!page.loaded && !page.isDataLoading())
 						page.loadData();
@@ -204,6 +213,9 @@ public class DiscoverFragment extends AppKitFragment implements ScrollableToTop{
 			Nav.goForResult(getActivity(), SearchQueryFragment.class, args, QUERY_RESULT, DiscoverFragment.this);
 		});
 		tabsDivider=view.findViewById(R.id.tabs_divider);
+
+		AccessRecycler currentFragment=(AccessRecycler) getFragmentForPage(pager.getCurrentItem());
+		scroller.setScrollableChildSupplier(currentFragment::getRecycler);
 
 		return view;
 	}

@@ -3,6 +3,7 @@ package org.joinmastodon.android.fragments.discover;
 import android.os.Bundle;
 
 import org.joinmastodon.android.api.requests.accounts.GetFollowSuggestions;
+import org.joinmastodon.android.fragments.AccessRecycler;
 import org.joinmastodon.android.fragments.ScrollableToTop;
 import org.joinmastodon.android.fragments.account_list.BaseAccountListFragment;
 import org.joinmastodon.android.model.FollowSuggestion;
@@ -16,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.utils.MergeRecyclerAdapter;
 
-public class DiscoverAccountsFragment extends BaseAccountListFragment implements ScrollableToTop{
+public class DiscoverAccountsFragment extends BaseAccountListFragment implements ScrollableToTop, AccessRecycler{
 	private DiscoverInfoBannerHelper bannerHelper;
 
 	@Override
@@ -50,5 +51,10 @@ public class DiscoverAccountsFragment extends BaseAccountListFragment implements
 	@Override
 	public void scrollToTop(){
 		smoothScrollRecyclerViewToTop(list);
+	}
+
+	@Override
+	public RecyclerView getRecycler(){
+		return list;
 	}
 }
